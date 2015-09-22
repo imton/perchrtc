@@ -1,12 +1,12 @@
 Pod::Spec.new do |s|
 
-  s.name         = "nighthawk-webrtc"
+  s.name         = "gaston-nighthawk-webrtc"
   s.version      = "45"
   s.platform     = :ios, '7.0'
   s.summary      = "Pre-compiled library for libWebRTC."
 
   s.homepage     = "https://perch.co"
-  s.author       = { "Chris Eagleston" => "chris@perch.co" }
+  s.authors       = { "Gaston M" => "gaston@black.uy", "Chris Eagleston" => "chris@perch.co" }
 
   s.source       = { :http => "https://s3.amazonaws.com/perch-pods/webrtc-ios-chrome-m45-capture-xcode.zip" }
 

@@ -4,6 +4,6 @@ inhibit_all_warnings!
 platform :ios, '7.0'
 
 pod 'CocoaLumberjack', "~> 2.0"
-pod 'nighthawk-webrtc', :podspec => './nighthawk-webrtc-chrome-m45-capture-xcode.podspec'
+pod 'gaston-nighthawk-webrtc'
 
 link_with 'PerchRTC', 'PerchRTCTests'
