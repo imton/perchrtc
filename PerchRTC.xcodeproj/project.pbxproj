@@ -622,10 +622,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -661,10 +657,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -685,7 +677,10 @@
 				GCC_PREFIX_HEADER = "PerchRTC/PerchRTC-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"${SRCROOT}\"/**",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/CocoaLumberjack\"",
+					"\"${PODS_ROOT}/Headers/Public/gaston-nighthawk-webrtc\"",
+					"\"$(SRCROOT)\"/**",
 				);
 				INFOPLIST_FILE = "PerchRTC/PerchRTC-Info.plist";
 				OTHER_CPLUSPLUSFLAGS = (
@@ -710,7 +705,10 @@
 				GCC_PREFIX_HEADER = "PerchRTC/PerchRTC-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"${SRCROOT}\"/**",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/CocoaLumberjack\"",
+					"\"${PODS_ROOT}/Headers/Public/gaston-nighthawk-webrtc\"",
+					"\"$(SRCROOT)\"/**",
 				);
 				INFOPLIST_FILE = "PerchRTC/PerchRTC-Info.plist";
 				OTHER_CPLUSPLUSFLAGS = (

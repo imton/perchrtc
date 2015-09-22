@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <PHConnectionBroker.h>
+#import "PHConnectionBroker.h"
 
 @interface PHViewController : UIViewController <PHConnectionBrokerBusDelegate, PHConnectionBrokerDelegate>
 

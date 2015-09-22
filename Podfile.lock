@@ -7,7 +7,7 @@ PODS:
     - CocoaLumberjack/Core
   - CocoaLumberjack/Extensions (2.0.1):
     - CocoaLumberjack/Default
-  - gaston-nighthawk-webrtc (45)
+  - gaston-nighthawk-webrtc (46)
 
 DEPENDENCIES:
   - CocoaLumberjack (~> 2.0)
@@ -15,6 +15,6 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   CocoaLumberjack: 019d1361244274a6138c788c6cb80baabc13fb8f
-  gaston-nighthawk-webrtc: d2f1a8e2bab6ac879e340f770a66ad5777fdceb7
+  gaston-nighthawk-webrtc: 5a2b8a17a221cfa3aff8e5a2fd2a89d3169cb67e
 
 COCOAPODS: 0.39.0.beta.4

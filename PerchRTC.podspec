@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "PerchRTC"
-  s.version      = "1.0.3"
+  s.version      = "1.0.4"
   s.summary      = "Easiest way to include WebRTC in iOS."
 
   # s.description  = <<-DESC
@@ -27,7 +27,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios
   s.platform     = :ios, "7.0"
 
-  s.source       = { :git => "https://github.com/imton/perchrtc.git", :branch => "gaston", :tag => "1.0.3" }
+  s.source       = { :git => "https://github.com/imton/perchrtc.git", :branch => "gaston", :tag => "1.0.4" }
 
 
 
@@ -78,10 +78,12 @@ Pod::Spec.new do |s|
   #  where they will only apply to your library. If you depend on other Podspecs
   #  you can include multiple dependencies to ensure it works.
 
+  s.prefix_header_file = 'PerchRTC-Prefix.pch'
+
   s.requires_arc = true
 
   # s.xcconfig  =  { 'LIBRARY_SEARCH_PATHS' => "#{File.join(File.dirname(__FILE__), 'subdir-in-repo')}" }
-  # s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
+  s.xcconfig = { "HEADER_SEARCH_PATHS" => "\"$(SRCROOT)\"/**" }
 
   s.dependency "CocoaLumberjack", "~> 2.0"
   s.dependency "gaston-nighthawk-webrtc"

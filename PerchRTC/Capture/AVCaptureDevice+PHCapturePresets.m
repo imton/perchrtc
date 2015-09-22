@@ -50,7 +50,7 @@
         }
     }
 
-    DDLogInfo(@"Best device format was: %@", bestFormat);
+//    DDLogInfo(@"Best device format was: %@", bestFormat);
     
     return bestFormat;
 }
