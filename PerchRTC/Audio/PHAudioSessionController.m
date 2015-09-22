@@ -91,7 +91,7 @@
 - (NSError *)deactivateSession
 {
     
-//    DDLogVerbose(@"Deactivate audio session with mode: %lu", (unsigned long)self.sessionMode);
+    DDLogVerbose(@"Deactivate audio session with mode: %lu", (unsigned long)self.sessionMode);
 
     NSError *deactiveError = nil;
 
@@ -114,7 +114,7 @@
 
 - (NSError *)activateSession:(BOOL)active withAudioMode:(PHAudioSessionMode)sessionMode
 {
-//    DDLogVerbose(@"Activate audio session with mode: %lu", (unsigned long)sessionMode);
+    DDLogVerbose(@"Activate audio session with mode: %lu", (unsigned long)sessionMode);
 
     if (self.mediaServerRestarting) {
         DDLogVerbose(@"Media server is restarting, delaying activation.");

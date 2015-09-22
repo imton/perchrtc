@@ -78,7 +78,7 @@ Pod::Spec.new do |s|
   #  where they will only apply to your library. If you depend on other Podspecs
   #  you can include multiple dependencies to ensure it works.
 
-  s.prefix_header_file = 'PerchRTC-Prefix.pch'
+  s.prefix_header_file = 'PerchRTC/PerchRTC-Prefix.pch'
 
   s.requires_arc = true
 
