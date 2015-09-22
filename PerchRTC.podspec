@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "PerchRTC"
-  s.version      = "1.0.0"
+  s.version      = "1.0.1"
   s.summary      = "Easiest way to include WebRTC in iOS."
 
   # s.description  = <<-DESC
@@ -27,7 +27,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios
   s.platform     = :ios, "7.0"
 
-  s.source       = { :git => "https://github.com/imton/perchrtc.git", :branch => "gaston", :tag => "1.0.0" }
+  s.source       = { :git => "https://github.com/imton/perchrtc.git", :branch => "gaston", :tag => "1.0.1" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
