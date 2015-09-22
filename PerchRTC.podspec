@@ -27,7 +27,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios
   s.platform     = :ios, "7.0"
 
-  s.source       = { :git => "https://github.com/imton/perchrtc.git", :tag => "1.0.0" }
+  s.source       = { :git => "https://github.com/imton/perchrtc.git", :branch => "gaston", :tag => "1.0.0" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
