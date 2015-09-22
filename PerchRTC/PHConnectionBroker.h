@@ -39,7 +39,6 @@
 -(void) sendToPeerID:(NSString*)_peerID event:(NSString*)_eventName data:(NSDictionary*)_data;
 -(void) receivedFromPeerEvent:(void (^)(NSString* peerID, NSString* eventName, NSDictionary* data, NSString* connectionID))_received;
 
-//:(NSString*)_event data:(NSDictionary*)_data connectionID:(NSString*)_connectionID;
 @end
 
 
@@ -56,12 +55,6 @@
 @property (nonatomic, strong, readonly) RTCMediaStream *localStream;
 
 @property (nonatomic, strong, readonly) NSArray *remoteStreams;
-
-//@property (nonatomic, assign, readonly) XSPeerConnectionState peerConnectionState;
-
-//@property (nonatomic, strong, readonly) XSRoom *room;
-
-//@property (nonatomic, strong, readonly) AFNetworkReachabilityManager *reachability;
 
 - (instancetype)initWithDelegate:(id<PHConnectionBrokerDelegate>)_aDelegate busDelegate:(id<PHConnectionBrokerBusDelegate>)_aBusDelegate;
 
