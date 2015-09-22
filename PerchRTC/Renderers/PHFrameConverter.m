@@ -7,11 +7,11 @@
 //
 
 #import "PHFrameConverter.h"
-#import "libyuv.h"
+#import <gaston-nighthawk-webrtc/libyuv.h>
 
 #import "PHConvert.h"
 
-#import <nighthawk-webrtc/RTCI420Frame.h>
+#import <gaston-nighthawk-webrtc/RTCI420Frame.h>
 #import <Accelerate/Accelerate.h>
 
 static size_t kFrameConverterBufferPoolHint = 5;

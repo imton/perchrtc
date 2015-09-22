@@ -11,7 +11,7 @@
 #import "PHFrameConverter.h"
 
 #import <CoreVideo/CoreVideo.h>
-#import <nighthawk-webrtc/RTCVideoTrack.h>
+#import <gaston-nighthawk-webrtc/RTCVideoTrack.h>
 #import <QuartzCore/QuartzCore.h>
 
 @interface PHQuartzVideoView()

@@ -30,6 +30,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/imton/perchrtc.git", :branch => "gaston", :tag => "1.0.2" }
 
 
+
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
   #  CocoaPods is smart about how it includes source code. For source files
@@ -79,7 +80,9 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
 
+  # s.xcconfig  =  { 'LIBRARY_SEARCH_PATHS' => "#{File.join(File.dirname(__FILE__), 'subdir-in-repo')}" }
   # s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
+
   s.dependency "CocoaLumberjack", "~> 2.0"
   s.dependency "gaston-nighthawk-webrtc"
 

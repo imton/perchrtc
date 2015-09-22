@@ -38,41 +38,31 @@ static NSUInteger kPHConnectionManagerMaxWebSocketAuthAttempts = 3;
 
 // Types
 
-NSString * const kXSMessageTypeKey = @"type";
+#define kXSMessageTypeKey "type"
 
 // Content
 
-NSString * const kXSMessageSenderIdKey = @"userid";
-NSString * const kXSMessageTargetIdKey = @"targetUserId";
-NSString * const kXSMessageDataKey = @"message";
-NSString * const kXSMessagePeerDataKey = @"data";
-NSString * const kXSMessageRoomKey = @"room";
-NSString * const kXSMessageConnectionIdKey = @"connectionId";
-NSString * const kXSMessageEventName = @"eventName";
-
-// Server message event types
-
-NSString * const kXSMessageRoomJoin = @"peer_connected";
-NSString * const kXSMessageRoomLeave = @"peer_removed";
-NSString * const kXSMessageRoomUsersUpdate = @"peers";
-
-// Server message payloads.
-
-NSString * const kXSMessageRoomUsersUpdateDataKey = @"users";
+#define kXSMessageSenderIdKey @"userid"
+#define kXSMessageTargetIdKey @"targetUserId"
+#define kXSMessageDataKey @"message"
+#define kXSMessagePeerDataKey @"data"
+#define kXSMessageRoomKey @"room"
+#define kXSMessageConnectionIdKey @"connectionId"
+#define kXSMessageEventName @"eventName"
 
 // Peer message event types.
 
-NSString * const kXSMessageEventICE = @"ice";
-NSString * const kXSMessageEventOffer = @"offer";
-NSString * const kXSMessageEventAnswer = @"answer";
-NSString * const kXSMessageEventBye = @"bye";
+#define kXSMessageEventICE @"ice"
+#define kXSMessageEventOffer @"offer"
+#define kXSMessageEventAnswer @"answer"
+#define kXSMessageEventBye @"bye"
 
 // Peer message payloads.
 
-NSString * const kXSMessageOfferDataKey = @"offer";
-NSString * const kXSMessageAnswerDataKey = @"answer";
-NSString * const kXSMessageICECandidateDataKey = @"iceCandidate";
-NSString * const kXSMessageByeDataKey = @"bye";
+#define kXSMessageOfferDataKey @"offer"
+#define kXSMessageAnswerDataKey @"answer"
+#define kXSMessageICECandidateDataKey @"iceCandidate"
+#define kXSMessageByeDataKey @"bye"
 
 
 #if !TARGET_IPHONE_SIMULATOR
@@ -104,6 +94,32 @@ static BOOL kPHConnectionManagerUseCaptureKit = YES;
         _delegate = _aDelegate;
         _busDelegate = _aBusDelegate;
         _mutableRemoteStreams = [NSMutableArray array];
+        
+        NSAssert(_busDelegate, @"A bus delegate is required.");
+        
+        __weak typeof(self) weakSelf = self;
+        [_busDelegate receivedFromPeerEvent:^(NSString *peerID, NSString *eventName, NSDictionary *data, NSString *connectionID) {
+            
+            if ([eventName isEqualToString:kXSMessageEventICE]){
+                
+                [weakSelf handleICEMessage:data peerID:peerID connectionID:connectionID];
+                
+            }else if ([eventName isEqualToString:kXSMessageEventOffer]){
+                
+                [weakSelf handleOffer:data peerID:peerID connectionID:connectionID];
+                
+            }else if ([eventName isEqualToString:kXSMessageEventAnswer]){
+                
+                [weakSelf handleAnswer:data peerID:peerID connectionID:connectionID];
+                
+            }else if ([eventName isEqualToString:kXSMessageEventBye]){
+                
+                [weakSelf handleBye:data peerID:peerID connectionID:connectionID];
+                
+            }
+            
+        }];
+        
     }
     return self;
 }
@@ -168,10 +184,10 @@ static BOOL kPHConnectionManagerUseCaptureKit = YES;
 }
 
 
-- (void)setupPeerConnectionWithPeer:(NSString*)_peerID
-                         ICEServers:(NSArray*)_iceServersDictionary
-                       connectionId:(NSString *)_connectionId
-                              offer:(RTCSessionDescription *)_offerSDP
+- (void)setupPeerConnectionWithPeerID:(NSString*)_peerID
+                           ICEServers:(NSArray*)_iceServersDictionary
+                         connectionId:(NSString *)_connectionId
+                                offer:(RTCSessionDescription *)_offerSDP
 {
     
     NSMutableArray *iceServers = [NSMutableArray array];
@@ -221,39 +237,13 @@ static BOOL kPHConnectionManagerUseCaptureKit = YES;
 {
     DDLogInfo(@"Connection broker: Disconnect.");
 
-    // We are assuming that its possible to send messages to the room immediately before closing the socket in teardownConnection.
-    // This has worked so far in my testing.
-
-//    if (self.peerClient.connectionState == XSPeerConnectionStateConnected) {
-        [self sendByeToConnectedPeer];
-//    }
-
-//    [self.peerClient disconnect];
-
-//    [self teardownAPIClient];
+    [self sendByeToConnectedPeer];
 
     [self teardownMedia];
 
-    if (self.peerConnectionState == XSPeerConnectionStateDisconnected) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self.delegate connectionBrokerDidFinish:self];
-        });
-    }
+    [self.delegate connectionBrokerDidFinish:self]; // TOREV
+    
 }
-//
-//- (void)teardownAPIClient
-//{
-//
-//    self.apiClient = nil;
-//
-//    self.retryCount = 0;
-//}
-
-//- (void)teardownReachability
-//{
-//    [self.reachability stopMonitoring];
-//    self.reachability = nil;
-//}
 
 - (void)teardownMedia
 {
@@ -278,29 +268,21 @@ static BOOL kPHConnectionManagerUseCaptureKit = YES;
         NSDictionary *messageData = @{kXSMessageConnectionIdKey : connectionId,
                                       kXSMessageOfferDataKey : json};
         
-        [[self busDelegate] sendToPeerID:peerID event:kXSMessageEventOffer data:messageData];
+        [[self busDelegate] sendToPeerID:peerId event:kXSMessageEventOffer data:json];
         
     } else {
         
         // Answer
         
         NSDictionary *messageData = @{kXSMessageConnectionIdKey : connectionId,
-                                      kXSMessageAnswerDataKey : answerData};
+                                      kXSMessageAnswerDataKey : json};
         
-        [[self busDelegate] sendToPeerID:peerID event:kXSMessageEventAnswer data:messageData];
+        [[self busDelegate] sendToPeerID:peerId event:kXSMessageEventAnswer data:messageData];
         
     }
 
 }
 
-
-+ (NSDictionary *)offerWithUserId:(NSString *)targetUserId connectionId:(NSString *)connectionId andData:(NSDictionary *)offerData
-{
-    NSDictionary *messageData = @{kXSMessageConnectionIdKey : connectionId,
-                                  kXSMessageOfferDataKey : offerData};
-    
-    return [XSMessage messageWithEventType:kXSMessageEventOffer userId:targetUserId messageData:messageData];
-}
 
 - (void)sendByeToConnectedPeer
 {
@@ -308,7 +290,7 @@ static BOOL kPHConnectionManagerUseCaptureKit = YES;
     PHPeerConnection *connection = [self.mediaSession connectionForPeerId:[[self busDelegate] peerID]];
 
     if (connection) {
-        [self sendByeToPeer:connection.peerId connectionId:connection.connectionId];
+        [self sendByeToPeerID:connection.peerId connectionId:connection.connectionId];
     }
 
 }
@@ -337,15 +319,18 @@ static BOOL kPHConnectionManagerUseCaptureKit = YES;
     return token;
 }
 
-- (void)handleICEMessage:(XSMessage *)message
+- (void)handleICEMessage:(NSDictionary *)_data peerID:(NSString*)_peerID connectionID:(NSString*)_connectionID
 {
-    NSDictionary *messageData = message.data[@"data"];
-    NSDictionary *iceData = messageData[kXSMessageICECandidateDataKey];
-    NSString *connectionId = messageData[kXSMessageConnectionIdKey];
-    BOOL shouldAccept = [connectionId length] > 0;
+
+    NSDictionary *iceData = _data[kXSMessageICECandidateDataKey];
+    NSString *connectionId = _data[kXSMessageConnectionIdKey];
+    
+    NSAssert([_connectionID isEqualToString:connectionId], @"Connection ID should match, right?");
+    
+    BOOL shouldAccept = connectionId.length > 0;
 
     if (!shouldAccept) {
-        DDLogWarn(@"Discarding ICE Message :%@", message);
+        DDLogWarn(@"Discarding ICE Message :%@", _data);
         return;
     }
 
@@ -355,67 +340,71 @@ static BOOL kPHConnectionManagerUseCaptureKit = YES;
     RTCICECandidate *candidate = [[RTCICECandidate alloc] initWithMid:mid
                                                                 index:sdpLineIndex.intValue
                                                                   sdp:sdp];
-
-    [self.mediaSession addIceCandidate:candidate forPeer:message.senderId connectionId:connectionId];;
+    
+    [self.mediaSession addIceCandidate:candidate forPeer:_peerID connectionId:connectionId];;
 }
 
-- (void)handleOffer:(XSMessage *)message
+- (void)handleOffer:(NSDictionary *)_data peerID:(NSString*)_peerID connectionID:(NSString*)_connectionID
 {
-    NSDictionary *messageData = message.data[@"data"];
-    NSString *connectionId = messageData[kXSMessageConnectionIdKey];
-    NSString *peerId = message.senderId;
-    PHPeerConnection *peerConnection = [self.mediaSession connectionForPeerId:peerId];
+    NSString *connectionId = _data[kXSMessageConnectionIdKey];
+    
+    NSAssert([_connectionID isEqualToString:connectionId], @"Connection ID should match, right?");
+
+    
+    PHPeerConnection *peerConnection = [self.mediaSession connectionForPeerId:_peerID];
     BOOL shouldAccept = !peerConnection && [connectionId length] > 0;
     BOOL shouldRenegotiate = peerConnection && [peerConnection.connectionId isEqualToString:connectionId];
 
-    NSString *sdpString = messageData[kXSMessageOfferDataKey][@"sdp"];
-    NSString *sdpType = messageData[kXSMessageOfferDataKey][@"type"];
+    NSString *sdpString = _data[kXSMessageOfferDataKey][@"sdp"];
+    NSString *sdpType = _data[kXSMessageOfferDataKey][@"type"];
     RTCSessionDescription *sdp = [[RTCSessionDescription alloc] initWithType:sdpType sdp:sdpString];
-    XSPeer *peer = self.peerClient.room.peers[peerId];
-
+    
     if (shouldAccept) {
-        [self fetchICEServersAndSetupPeerConnectionForRoom:self.peerClient.room peer:peer connectionId:connectionId offer:sdp];
+        [self setupPeerConnectionWithPeerID:_peerID ICEServers:[[self busDelegate] ICEServers] connectionId:connectionId offer:sdp];
+    }else if (shouldRenegotiate) {
+        [self.mediaSession addOffer:sdp forPeer:_peerID connectionId:connectionId];
+    }else {
+        [self sendByeToPeerID:_peerID connectionId:connectionId];
     }
-    else if (shouldRenegotiate) {
-        [self.mediaSession addOffer:sdp forPeer:message.senderId connectionId:connectionId];
-    }
-    else {
-        [self sendByeToPeer:self.room.peers[message.senderId] connectionId:connectionId];
-    }
+    
 }
 
-- (void)handleAnswer:(XSMessage *)message
+- (void)handleAnswer:(NSDictionary *)_data peerID:(NSString*)_peerID connectionID:(NSString*)_connectionID
 {
-    NSDictionary *messageData = message.data[@"data"];
-    NSString *connectionId = messageData[kXSMessageConnectionIdKey];
-    NSString *sdpString = messageData[kXSMessageAnswerDataKey][@"sdp"];
-    NSString *sdpType = messageData[kXSMessageAnswerDataKey][@"type"];
+    NSString *connectionId = _data[kXSMessageConnectionIdKey];
+    
+    NSAssert([_connectionID isEqualToString:connectionId], @"Connection ID should match, right?");
+ 
+    NSString *sdpString = _data[kXSMessageAnswerDataKey][@"sdp"];
+    NSString *sdpType = _data[kXSMessageAnswerDataKey][@"type"];
     RTCSessionDescription *sdp = [[RTCSessionDescription alloc] initWithType:sdpType sdp:sdpString];
 
-    [self.mediaSession addAnswer:sdp forPeer:message.senderId connectionId:connectionId];
+    [self.mediaSession addAnswer:sdp forPeer:_peerID connectionId:connectionId];
 }
 
-- (void)handleBye:(XSMessage *)message
+- (void)handleBye:(NSDictionary *)_data peerID:(NSString*)_peerID connectionID:(NSString*)_connectionID
 {
-    NSDictionary *messageData = message.data[@"data"];
-    NSString *connectionId = messageData[kXSMessageConnectionIdKey];
+    // NSDictionary *messageData = _data[kXSMessageByeDataKey];
+    NSString *connectionId = _data[kXSMessageConnectionIdKey];
 
-    [self.mediaSession closeConnectionWithPeer:message.senderId];
+    NSAssert([_connectionID isEqualToString:connectionId], @"Connection ID should match, right?");
+    
+    [self.mediaSession closeConnectionWithPeer:_peerID];
 }
 
-- (void)evaluatePeerCandidate:(XSPeer *)peer
-{
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-
-    PHPeerConnection *peerConnection = [self.mediaSession connectionForPeerId:peer.identifier];
-
-    if (!peerConnection) {
-        [self fetchICEServersAndSetupPeerConnectionForRoom:self.room peer:peer connectionId:nil offer:nil];
-    }
-    else {
-        DDLogWarn(@"Not opening a peer connection with: %@ because one already exists.", peer.identifier);
-    }
-}
+//- (void)evaluatePeerCandidate:(XSPeer *)peer
+//{
+//    NSLog(@"%s", __PRETTY_FUNCTION__);
+//
+//    PHPeerConnection *peerConnection = [self.mediaSession connectionForPeerId:peer.identifier];
+//
+//    if (!peerConnection) {
+//        [self fetchICEServersAndSetupPeerConnectionForRoom:self.room peer:peer connectionId:nil offer:nil];
+//    }
+//    else {
+//        DDLogWarn(@"Not opening a peer connection with: %@ because one already exists.", peer.identifier);
+//    }
+//}
 
 //- (BOOL)isRoomFull:(XSRoom *)room
 //{
@@ -446,9 +435,12 @@ static BOOL kPHConnectionManagerUseCaptureKit = YES;
                            @"candidate" : iceCandidate.sdp
                            };
 
-    XSMessage *message = [XSMessage iceCredentialsWithUserId:connection.peerId connectionId:connection.connectionId andData:json];
+    
+    NSDictionary *messageData = @{kXSMessageConnectionIdKey : connection.connectionId,
+                                  kXSMessageICECandidateDataKey : json};
+    
+    [[self busDelegate] sendToPeerID:connection.peerId event:kXSMessageEventICE data:messageData];
 
-    [self.peerClient sendMessage:message];
 }
 
 - (void)connection:(PHPeerConnection *)connection addedStream:(RTCMediaStream *)stream
@@ -480,16 +472,7 @@ static BOOL kPHConnectionManagerUseCaptureKit = YES;
         }
         case RTCICEConnectionDisconnected:
         {
-            // We had an active connection, but we lost it.
-            // Recover with an ice-restart?
-
-            BOOL peerReachable = self.room.peers[connection.peerId] != nil;
-            BOOL closeConnection = self.peerConnectionState != XSPeerConnectionStateConnected || !peerReachable;
-
-            if (closeConnection) {
-                [self.mediaSession closeConnectionWithPeer:connection.peerId];
-            }
-
+            [self.mediaSession closeConnectionWithPeer:connection.peerId];
             break;
         }
         case RTCICEConnectionFailed:
@@ -497,7 +480,7 @@ static BOOL kPHConnectionManagerUseCaptureKit = YES;
             // The connection failed during the ICE candidate phase.
             // While the peer is available on the signaling server we should retry with an ice-restart.
 
-            BOOL peerReachable = self.room.peers[connection.peerId] != nil;
+            BOOL peerReachable = YES;
             BOOL isInitiator = connection.role == PHPeerConnectionRoleInitiator;
             BOOL canAttemptRestart = connection.iceAttempts <= kPHConnectionManagerMaxIceAttempts;
 
@@ -523,108 +506,57 @@ static BOOL kPHConnectionManagerUseCaptureKit = YES;
     return YES;
 }
 
-#pragma mark - XSPeerClientDelegate
+//#pragma mark - XSPeerClientDelegate
+//
+//- (void)clientDidConnect:(XSPeerClient *)client
+//{
+//    // Wait for join event to come. Potentially inform our delegate of signaling connection status?
+//
+//    self.retryCount = 0;
+//}
 
-- (void)clientDidConnect:(XSPeerClient *)client
-{
-    // Wait for join event to come. Potentially inform our delegate of signaling connection status?
+//- (void)clientDidDisconnect:(XSPeerClient *)client
+//{
+//    // If this was a final disconnection, let our delegate know.
+//    // If we can reconnect, start now otherwise wait for reachability to return.
+//
+//    if (!self.apiClient) {
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            [self.delegate connectionBrokerDidFinish:self];
+//        });
+//    }
+//    else {
+//        [self checkAuthorizationStatus];
+//    }
+//}
 
-    self.retryCount = 0;
-}
+//- (void)client:(XSPeerClient *)client didEncounterError:(NSError *)error
+//{
+//    [self.delegate connectionBroker:self didFailWithError:error];
+//}
 
-- (void)clientDidDisconnect:(XSPeerClient *)client
-{
-    // If this was a final disconnection, let our delegate know.
-    // If we can reconnect, start now otherwise wait for reachability to return.
-
-    if (!self.apiClient) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self.delegate connectionBrokerDidFinish:self];
-        });
-    }
-    else {
-        [self checkAuthorizationStatus];
-    }
-}
-
-- (void)client:(XSPeerClient *)client didEncounterError:(NSError *)error
-{
-    [self.delegate connectionBroker:self didFailWithError:error];
-}
-
-#pragma mark - XSRoomObserver
-
-- (void)didJoinRoom:(XSRoom *)room
-{
-    // Prevent multi-party connections when there are too many participants.
-
-    if ([self isRoomFull:room]) {
-        [self.peerClient disconnect];
-        NSError *error = [[NSError alloc] initWithDomain:PHErrorDomain code:PHErrorCodeFullRoom userInfo:nil];
-        [self.delegate connectionBroker:self didFailWithError:error];
-        
-        return;
-    }
-
-    // If we are the first peer, wait for another.
-    // If other peers already exist then wait for an offer.
-
-    DDLogVerbose(@"Joined room with peers: %@", room.peers);
-}
-
-// TODO: Leave observer event is not fired.
-- (void)didLeaveRoom:(XSRoom *)room
-{
-}
-
-- (void)room:(XSRoom *)room didAddPeer:(XSPeer *)peer
-{
-    if (![self isRoomFull:room]) {
-        [self evaluatePeerCandidate:peer];
-    }
-}
-
-- (void)room:(XSRoom *)room didRemovePeer:(XSPeer *)peer
-{
-    NSString *peerId = peer.identifier;
-    PHPeerConnection *peerConnectionWrapper = [self.mediaSession connectionForPeerId:peerId];
-
-    if (!peerConnectionWrapper) {
-        return;
-    }
-
-    RTCICEConnectionState iceState = peerConnectionWrapper.peerConnection.iceConnectionState;
-
-    switch (iceState) {
-        case RTCICEConnectionDisconnected:
-        case RTCICEConnectionNew:
-        case RTCICEConnectionFailed:
-            [self.mediaSession closeConnectionWithPeer:peerId];
-            break;
-        default:
-            break;
-    }
-}
-
-- (void)room:(XSRoom *)room didReceiveMessage:(XSMessage *)message
-{
-    NSString *type = message.type;
-
-    // Handle incoming SDP offers, and answers.
-    // Handle ICE credentials from peers.
-
-    if ([type isEqualToString:kXSMessageEventICE]) {
-        [self handleICEMessage:message];
-    }
-    else if ([type isEqualToString:kXSMessageEventOffer]) {
-        [self handleOffer:message];
-    }
-    else if ([type isEqualToString:kXSMessageEventAnswer]) {
-        [self handleAnswer:message];
-    }
-    else if ([type isEqualToString:kXSMessageEventBye]) {
-        [self handleBye:message];
-    }
-}
+//#pragma mark - XSRoomObserver
+//
+//- (void)room:(XSRoom *)room didRemovePeer:(XSPeer *)peer
+//{
+//    NSString *peerId = peer.identifier;
+//    PHPeerConnection *peerConnectionWrapper = [self.mediaSession connectionForPeerId:peerId];
+//
+//    if (!peerConnectionWrapper) {
+//        return;
+//    }
+//
+//    RTCICEConnectionState iceState = peerConnectionWrapper.peerConnection.iceConnectionState;
+//
+//    switch (iceState) {
+//        case RTCICEConnectionDisconnected:
+//        case RTCICEConnectionNew:
+//        case RTCICEConnectionFailed:
+//            [self.mediaSession closeConnectionWithPeer:peerId];
+//            break;
+//        default:
+//            break;
+//    }
+//}
 
 @end

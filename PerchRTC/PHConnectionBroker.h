@@ -32,12 +32,14 @@
 
 @protocol PHConnectionBrokerBusDelegate<NSObject>
 
--(NSString*)connectionID;
--(NSString*)selfID;
--(NSString*)peerID;
--(void)sendToPeerID:(NSString*)_peerID event:(NSString*)_eventName data:(NSDictionary*)_data;
--(void)receivedFromPeerEvent:(NSString*)_event data:(NSDictionary*)_data connectionID:(NSString*)_connectionID;
+-(NSDictionary*) ICEServers;
+-(NSString*) connectionID;
+-(NSString*) selfID;
+-(NSString*) peerID;
+-(void) sendToPeerID:(NSString*)_peerID event:(NSString*)_eventName data:(NSDictionary*)_data;
+-(void) receivedFromPeerEvent:(void (^)(NSString* peerID, NSString* eventName, NSDictionary* data, NSString* connectionID))_received;
 
+//:(NSString*)_event data:(NSDictionary*)_data connectionID:(NSString*)_connectionID;
 @end
 
 

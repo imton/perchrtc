@@ -42,7 +42,7 @@ static CGFloat PHViewControllerDampingRatio = 0.85;
 static CGFloat PHViewControllerSpringVelocity = 0.25;
 static CGFloat PHViewControllerHorizontalPadding = 10.0;
 
-@interface PHViewController () <PHConnectionBrokerDelegate, PHRendererDelegate> // XSRoomObserver
+@interface PHViewController () <PHRendererDelegate>
 
 @property (nonatomic, strong) PHConnectionBroker *connectionBroker;
 @property (nonatomic, strong) PHMediaConfiguration *configuration;
@@ -368,15 +368,7 @@ static CGFloat PHViewControllerHorizontalPadding = 10.0;
 
 - (void)buttonPress:(UIButton *)sender
 {
-    BOOL wantToConnect = self.connectionBroker.localStream == nil && self.connectionBroker.room == nil;
-
-    if (wantToConnect) {
-        [sender setTitle:@"Joining" forState:UIControlStateNormal];
         [self connectWithPermission];
-    }
-    else {
-        [self startDisconnect];
-    }
 
     sender.enabled = NO;
 }
@@ -399,7 +391,6 @@ static CGFloat PHViewControllerHorizontalPadding = 10.0;
     [self hideAndRemoveRemoteRenderers];
     [self hideLocalRenderer];
 
-    [self.connectionBroker.room removeRoomObserver:self];
     [self.connectionBroker disconnect];
     [self.connectionBroker removeObserver:self forKeyPath:@"peerConnectionState"];
 }
@@ -462,14 +453,14 @@ static CGFloat PHViewControllerHorizontalPadding = 10.0;
 {
 //    NSString *name = [UIDevice currentDevice].name;
 //    XSRoom *room = [[XSRoom alloc] initWithAuthToken:nil username:name andRoomName:roomName];
-    PHConnectionBroker *connectionBroker = [[PHConnectionBroker alloc] initWithDelegate:self];
+    PHConnectionBroker *connectionBroker = [[PHConnectionBroker alloc] initWithDelegate:self busDelegate:self];
 
 //    [room addRoomObserver:self];
 
 //    [connectionBroker addObserver:self forKeyPath:@"peerConnectionState" options:NSKeyValueObservingOptionOld context:NULL];
 //    [connectionBroker connectToRoom:room withConfiguration:self.configuration];
 
-//    self.connectionBroker = connectionBroker;
+    self.connectionBroker = connectionBroker;
 
 //    [UIApplication sharedApplication].idleTimerDisabled = YES;
 
@@ -659,10 +650,10 @@ static CGFloat PHViewControllerHorizontalPadding = 10.0;
 {
     NSString *message = @"Connecting To Peers";
 
-    if ([self.connectionBroker.room.peers count] == 1) {
-        XSPeer *peer = [[self.connectionBroker.room.peers allValues] firstObject];
-        message = [NSString stringWithFormat:@"Connecting To %@", peer.identifier];
-    }
+//    if ([self.connectionBroker.room.peers count] == 1) {
+//        XSPeer *peer = [[self.connectionBroker.room.peers allValues] firstObject];
+//        message = [NSString stringWithFormat:@"Connecting To %@", peer.identifier];
+//    }
 
     [self showWaitingInterfaceWithMessage:message completion:nil];
 }
@@ -788,17 +779,17 @@ static CGFloat PHViewControllerHorizontalPadding = 10.0;
 {
     DDLogError(@"Connection broker, did encounter error: %@", error);
     
-    if ([broker.remoteStreams count] == 0 && broker.peerConnectionState == XSPeerConnectionStateDisconnected) {
-        [self showNoInternetMessage];
-        
-        self.connectButton.enabled = YES;
-        [self.connectButton setTitle:@"Leave" forState:UIControlStateNormal];
-    }
-    else if (error.code == PHErrorCodeFullRoom) {
-        [self showWaitingInterfaceWithMessage:[NSString stringWithFormat:@"Sorry, %@ is full.", broker.room.name] completion:nil];
+//    if ([broker.remoteStreams count] == 0) {
+//        [self showNoInternetMessage];
+//        
+//        self.connectButton.enabled = YES;
+//        [self.connectButton setTitle:@"Leave" forState:UIControlStateNormal];
+//    }
+//    else if (error.code == PHErrorCodeFullRoom) {
+//        [self showWaitingInterfaceWithMessage:[NSString stringWithFormat:@"Sorry, %@ is full.", broker.room.name] completion:nil];
 
         [self startDisconnect];
-    }
+//    }
 }
 
 #pragma mark - PHRendererDelegate
@@ -825,45 +816,46 @@ static CGFloat PHViewControllerHorizontalPadding = 10.0;
     }
 }
 
-#pragma mark - XSRoomObserver
+//
+//#pragma mark - XSRoomObserver
+//
+//- (void)didJoinRoom:(XSRoom *)room
+//{
+//    BOOL isWaiting = [room.peers count] == 0;
+//
+//    [self.connectButton setTitle:@"Leave" forState:UIControlStateNormal];
+//    self.connectButton.enabled = YES;
+//
+//    if (isWaiting) {
+//        [self showWaitingInterfaceWithDefaultMessage];
+//    }
+//    else if ([self.connectionBroker.remoteStreams count] == 0) {
+//        [self showConnectingMessage];
+//    }
+//}
+//
+//- (void)didLeaveRoom:(XSRoom *)room
+//{
+//
+//}
+//
+//- (void)room:(XSRoom *)room didAddPeer:(XSPeer *)peer
+//{
+//    if (!self.navigationController.navigationBarHidden) {
+//        [self showConnectingMessage];
+//    }
+//}
 
-- (void)didJoinRoom:(XSRoom *)room
-{
-    BOOL isWaiting = [room.peers count] == 0;
-
-    [self.connectButton setTitle:@"Leave" forState:UIControlStateNormal];
-    self.connectButton.enabled = YES;
-
-    if (isWaiting) {
-        [self showWaitingInterfaceWithDefaultMessage];
-    }
-    else if ([self.connectionBroker.remoteStreams count] == 0) {
-        [self showConnectingMessage];
-    }
-}
-
-- (void)didLeaveRoom:(XSRoom *)room
-{
-
-}
-
-- (void)room:(XSRoom *)room didAddPeer:(XSPeer *)peer
-{
-    if (!self.navigationController.navigationBarHidden) {
-        [self showConnectingMessage];
-    }
-}
-
-- (void)room:(XSRoom *)room didRemovePeer:(XSPeer *)peer
-{
-    if ([room.peers count] == 0 && [self.connectionBroker.remoteStreams count] == 0) {
-        [self showWaitingInterfaceWithDefaultMessage];
-    }
-}
-
-- (void)room:(XSRoom *)room didReceiveMessage:(XSMessage *)message
-{
-
-}
+//- (void)room:(XSRoom *)room didRemovePeer:(XSPeer *)peer
+//{
+//    if ([room.peers count] == 0 && [self.connectionBroker.remoteStreams count] == 0) {
+//        [self showWaitingInterfaceWithDefaultMessage];
+//    }
+//}
+//
+//- (void)room:(XSRoom *)room didReceiveMessage:(XSMessage *)message
+//{
+//
+//}
 
 @end

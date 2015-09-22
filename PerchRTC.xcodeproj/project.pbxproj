@@ -24,10 +24,6 @@
 		BF3D94111A19B6ED0068C766 /* AVCaptureDevice+PHCapturePresets.m in Sources */ = {isa = PBXBuildFile; fileRef = BF3D94101A19B6ED0068C766 /* AVCaptureDevice+PHCapturePresets.m */; };
 		BF3D94171A19B7E00068C766 /* PHVideoPublisher.m in Sources */ = {isa = PBXBuildFile; fileRef = BF3D94161A19B7E00068C766 /* PHVideoPublisher.m */; };
 		BF3F17B11A52895300443D52 /* PHAudioSessionController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF3F17B01A52895300443D52 /* PHAudioSessionController.m */; };
-		BF46904619DD3AD100B02945 /* XSMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = BF46903F19DD3AD100B02945 /* XSMessage.m */; };
-		BF46904719DD3AD100B02945 /* XSPeer.m in Sources */ = {isa = PBXBuildFile; fileRef = BF46904119DD3AD100B02945 /* XSPeer.m */; };
-		BF46904819DD3AD100B02945 /* XSPeerClient.m in Sources */ = {isa = PBXBuildFile; fileRef = BF46904319DD3AD100B02945 /* XSPeerClient.m */; };
-		BF46904919DD3AD100B02945 /* XSRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = BF46904519DD3AD100B02945 /* XSRoom.m */; };
 		BF50AB8A1AFC831B00E56E34 /* PHMediaConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = BF50AB891AFC831B00E56E34 /* PHMediaConfiguration.m */; };
 		BF5DE2DC1AFEE6AC00664DCA /* PHConvert.m in Sources */ = {isa = PBXBuildFile; fileRef = BF5DE2DA1AFEE6AC00664DCA /* PHConvert.m */; };
 		BF80C58C19960F54007DE967 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF80C58B19960F54007DE967 /* Foundation.framework */; };
@@ -99,14 +95,6 @@
 		BF3D94161A19B7E00068C766 /* PHVideoPublisher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHVideoPublisher.m; sourceTree = "<group>"; };
 		BF3F17AF1A52895300443D52 /* PHAudioSessionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAudioSessionController.h; sourceTree = "<group>"; };
 		BF3F17B01A52895300443D52 /* PHAudioSessionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHAudioSessionController.m; sourceTree = "<group>"; };
-		BF46903E19DD3AD100B02945 /* XSMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XSMessage.h; sourceTree = "<group>"; };
-		BF46903F19DD3AD100B02945 /* XSMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XSMessage.m; sourceTree = "<group>"; };
-		BF46904019DD3AD100B02945 /* XSPeer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XSPeer.h; sourceTree = "<group>"; };
-		BF46904119DD3AD100B02945 /* XSPeer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XSPeer.m; sourceTree = "<group>"; };
-		BF46904219DD3AD100B02945 /* XSPeerClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XSPeerClient.h; sourceTree = "<group>"; };
-		BF46904319DD3AD100B02945 /* XSPeerClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XSPeerClient.m; sourceTree = "<group>"; };
-		BF46904419DD3AD100B02945 /* XSRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XSRoom.h; sourceTree = "<group>"; };
-		BF46904519DD3AD100B02945 /* XSRoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XSRoom.m; sourceTree = "<group>"; };
 		BF50AB891AFC831B00E56E34 /* PHMediaConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHMediaConfiguration.m; sourceTree = "<group>"; };
 		BF5DE2DA1AFEE6AC00664DCA /* PHConvert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHConvert.m; sourceTree = "<group>"; };
 		BF5DE2DB1AFEE6AC00664DCA /* PHConvert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHConvert.h; sourceTree = "<group>"; };
@@ -228,21 +216,6 @@
 			path = Audio;
 			sourceTree = "<group>";
 		};
-		BF46903D19DD3AD100B02945 /* XirSys */ = {
-			isa = PBXGroup;
-			children = (
-				BF46903E19DD3AD100B02945 /* XSMessage.h */,
-				BF46903F19DD3AD100B02945 /* XSMessage.m */,
-				BF46904019DD3AD100B02945 /* XSPeer.h */,
-				BF46904119DD3AD100B02945 /* XSPeer.m */,
-				BF46904219DD3AD100B02945 /* XSPeerClient.h */,
-				BF46904319DD3AD100B02945 /* XSPeerClient.m */,
-				BF46904419DD3AD100B02945 /* XSRoom.h */,
-				BF46904519DD3AD100B02945 /* XSRoom.m */,
-			);
-			path = XirSys;
-			sourceTree = "<group>";
-		};
 		BF5312E619E1C42E000C7769 /* Capture */ = {
 			isa = PBXGroup;
 			children = (
@@ -312,7 +285,6 @@
 				4BCFC5BE1A5215A800DFC4B8 /* PHErrors.m */,
 				BFC084EE19DC976600B38772 /* Renderers */,
 				BF021E5D1A4E849D007E8F11 /* User Interface */,
-				BF46903D19DD3AD100B02945 /* XirSys */,
 			);
 			path = PerchRTC;
 			sourceTree = "<group>";
@@ -548,14 +520,12 @@
 			files = (
 				BFF2532B1A41514C007DBE23 /* PHMediaSession.m in Sources */,
 				BF50AB8A1AFC831B00E56E34 /* PHMediaConfiguration.m in Sources */,
-				BF46904619DD3AD100B02945 /* XSMessage.m in Sources */,
 				BF3D94111A19B6ED0068C766 /* AVCaptureDevice+PHCapturePresets.m in Sources */,
 				BF83888119E90D4A007578A9 /* PHSampleBufferRenderer.m in Sources */,
 				BFC084F419DC976600B38772 /* PHQuartzVideoView.m in Sources */,
 				BF3D940B1A19B6A90068C766 /* PHCaptureManager.m in Sources */,
 				BF021E661A4E850B007E8F11 /* UIButton+PHButton.m in Sources */,
 				BF5DE2DC1AFEE6AC00664DCA /* PHConvert.m in Sources */,
-				BF46904719DD3AD100B02945 /* XSPeer.m in Sources */,
 				BF99485E1AF9F52C00B40D03 /* PHEAGLRenderer.m in Sources */,
 				BFEF78811A40F10800BB6711 /* PHPeerConnection.m in Sources */,
 				BF3D940E1A19B6C50068C766 /* PHCapturePreviewView.m in Sources */,
@@ -571,12 +541,10 @@
 				BF80C59C19960F54007DE967 /* PHAppDelegate.m in Sources */,
 				BFEC3DF61A6B7FC4005CE903 /* PHSessionDescriptionFactory.m in Sources */,
 				BF0206BB1AFC376A00C8160E /* PHSettingsViewController.m in Sources */,
-				BF46904819DD3AD100B02945 /* XSPeerClient.m in Sources */,
 				BF021E631A4E84CD007E8F11 /* PHViewController.m in Sources */,
 				BF3F17B11A52895300443D52 /* PHAudioSessionController.m in Sources */,
 				4BCFC5BF1A5215A800DFC4B8 /* PHErrors.m in Sources */,
 				BF80C59819960F54007DE967 /* main.m in Sources */,
-				BF46904919DD3AD100B02945 /* XSRoom.m in Sources */,
 				BF021E601A4E84B1007E8F11 /* RTCMediaStream+PHStreamConfiguration.m in Sources */,
 				BF19FD971AFADCCF00719AA9 /* PHVideoCaptureBridge.mm in Sources */,
 			);
