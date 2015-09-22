@@ -18,15 +18,15 @@
 #import "PHSampleBufferRenderer.h"
 #import "PHSampleBufferView.h"
 #import "PHSettingsViewController.h"
-#import "XSPeer.h"
-#import "XSRoom.h"
+//#import "XSPeer.h"
+//#import "XSRoom.h"
 
 #import "RTCMediaStream+PHStreamConfiguration.h"
 #import "UIButton+PHButton.h"
 #import "UIDevice+PHDeviceAdditions.h"
 #import "UIFont+Fonts.h"
 
-#import "AFNetworkReachabilityManager.h"
+//#import "AFNetworkReachabilityManager.h"
 #import "RTCMediaStream.h"
 #import "RTCVideoTrack.h"
 #import "RTCEAGLVideoView.h"
@@ -42,7 +42,7 @@ static CGFloat PHViewControllerDampingRatio = 0.85;
 static CGFloat PHViewControllerSpringVelocity = 0.25;
 static CGFloat PHViewControllerHorizontalPadding = 10.0;
 
-@interface PHViewController () <PHConnectionBrokerDelegate, PHRendererDelegate, XSRoomObserver>
+@interface PHViewController () <PHConnectionBrokerDelegate, PHRendererDelegate> // XSRoomObserver
 
 @property (nonatomic, strong) PHConnectionBroker *connectionBroker;
 @property (nonatomic, strong) PHMediaConfiguration *configuration;
@@ -172,15 +172,15 @@ static CGFloat PHViewControllerHorizontalPadding = 10.0;
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if ([keyPath isEqualToString:@"peerConnectionState"]) {
-        XSPeerConnectionState connectionState = self.connectionBroker.peerConnectionState;
-        BOOL reachable = self.connectionBroker.reachability.isReachable;
-        BOOL showNotConnected = [self.connectionBroker.remoteStreams count] == 0 && connectionState == XSPeerConnectionStateDisconnected && !reachable;
-
-        if (self.connectionBroker.reachability && showNotConnected) {
-            [self showNoInternetMessage];
-        }
-    }
+//    if ([keyPath isEqualToString:@"peerConnectionState"]) {
+////        XSPeerConnectionState connectionState = self.connectionBroker.peerConnectionState;
+////        BOOL reachable = self.connectionBroker.reachability.isReachable;
+//        BOOL showNotConnected = [self.connectionBroker.remoteStreams count] == 0 && connectionState == XSPeerConnectionStateDisconnected;
+//
+//        if (self.connectionBroker.reachability && showNotConnected) {
+//            [self showNoInternetMessage];
+//        }
+//    }
 }
 
 #pragma mark - Private
@@ -460,24 +460,24 @@ static CGFloat PHViewControllerHorizontalPadding = 10.0;
 
 - (void)connectToRoom:(NSString *)roomName
 {
-    NSString *name = [UIDevice currentDevice].name;
-    XSRoom *room = [[XSRoom alloc] initWithAuthToken:nil username:name andRoomName:roomName];
+//    NSString *name = [UIDevice currentDevice].name;
+//    XSRoom *room = [[XSRoom alloc] initWithAuthToken:nil username:name andRoomName:roomName];
     PHConnectionBroker *connectionBroker = [[PHConnectionBroker alloc] initWithDelegate:self];
 
-    [room addRoomObserver:self];
+//    [room addRoomObserver:self];
 
-    [connectionBroker addObserver:self forKeyPath:@"peerConnectionState" options:NSKeyValueObservingOptionOld context:NULL];
-    [connectionBroker connectToRoom:room withConfiguration:self.configuration];
+//    [connectionBroker addObserver:self forKeyPath:@"peerConnectionState" options:NSKeyValueObservingOptionOld context:NULL];
+//    [connectionBroker connectToRoom:room withConfiguration:self.configuration];
 
-    self.connectionBroker = connectionBroker;
+//    self.connectionBroker = connectionBroker;
 
-    [UIApplication sharedApplication].idleTimerDisabled = YES;
+//    [UIApplication sharedApplication].idleTimerDisabled = YES;
 
-    [self.navigationItem setRightBarButtonItem:nil animated:YES];
+//    [self.navigationItem setRightBarButtonItem:nil animated:YES];
 
-    [UIView animateWithDuration:0.2 animations:^{
-        self.roomInfoLabel.alpha = 0.0;
-    }];
+//    [UIView animateWithDuration:0.2 animations:^{
+//        self.roomInfoLabel.alpha = 0.0;
+//    }];
 }
 
 - (void)removeRendererForStream:(RTCMediaStream *)stream

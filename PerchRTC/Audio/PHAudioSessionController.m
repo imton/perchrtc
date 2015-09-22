@@ -90,6 +90,7 @@
 
 - (NSError *)deactivateSession
 {
+    
     DDLogVerbose(@"Deactivate audio session with mode: %lu", (unsigned long)self.sessionMode);
 
     NSError *deactiveError = nil;

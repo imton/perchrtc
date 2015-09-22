@@ -7,18 +7,14 @@ PODS:
     - CocoaLumberjack/Core
   - CocoaLumberjack/Extensions (2.0.1):
     - CocoaLumberjack/Default
-  - nighthawk-webrtc (45)
+  - gaston-nighthawk-webrtc (45)
 
 DEPENDENCIES:
   - CocoaLumberjack (~> 2.0)
-  - nighthawk-webrtc (from `./nighthawk-webrtc-chrome-m45-capture-xcode.podspec`)
-
-EXTERNAL SOURCES:
-  nighthawk-webrtc:
-    :podspec: "./nighthawk-webrtc-chrome-m45-capture-xcode.podspec"
+  - gaston-nighthawk-webrtc
 
 SPEC CHECKSUMS:
   CocoaLumberjack: 019d1361244274a6138c788c6cb80baabc13fb8f
-  nighthawk-webrtc: 5f680d8a1b9a5280a4b9cb7c4f5d75ff4130a4a2
+  gaston-nighthawk-webrtc: d2f1a8e2bab6ac879e340f770a66ad5777fdceb7
 
-COCOAPODS: 0.38.2
+COCOAPODS: 0.39.0.beta.4

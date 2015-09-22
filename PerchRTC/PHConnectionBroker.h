@@ -8,14 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import "XSPeerClient.h"
-
 @class RTCVideoTrack;
 @class RTCMediaStream;
 @class PHConnectionBroker;
 @class PHMediaConfiguration;
-@class XSRoom;
-@class AFNetworkReachabilityManager;
+
+//@class AFNetworkReachabilityManager;
 
 // Provides information about connected streams, errors and final disconnections.
 @protocol PHConnectionBrokerDelegate<NSObject>
@@ -32,6 +30,18 @@
 
 @end
 
+@protocol PHConnectionBrokerBusDelegate<NSObject>
+
+-(NSString*)connectionID;
+-(NSString*)selfID;
+-(NSString*)peerID;
+-(void)sendToPeerID:(NSString*)_peerID event:(NSString*)_eventName data:(NSDictionary*)_data;
+-(void)receivedFromPeerEvent:(NSString*)_event data:(NSDictionary*)_data connectionID:(NSString*)_connectionID;
+
+@end
+
+
+
 /**
  *  The connection broker facilitates media streaming.
  *  The broker handles authorization, and signaling to establish and maintain connections.
@@ -39,20 +49,21 @@
 @interface PHConnectionBroker : NSObject
 
 @property (nonatomic, weak) id<PHConnectionBrokerDelegate> delegate;
+@property (nonatomic, weak) id<PHConnectionBrokerBusDelegate> busDelegate;
 
 @property (nonatomic, strong, readonly) RTCMediaStream *localStream;
 
 @property (nonatomic, strong, readonly) NSArray *remoteStreams;
 
-@property (nonatomic, assign, readonly) XSPeerConnectionState peerConnectionState;
+//@property (nonatomic, assign, readonly) XSPeerConnectionState peerConnectionState;
 
-@property (nonatomic, strong, readonly) XSRoom *room;
+//@property (nonatomic, strong, readonly) XSRoom *room;
 
-@property (nonatomic, strong, readonly) AFNetworkReachabilityManager *reachability;
+//@property (nonatomic, strong, readonly) AFNetworkReachabilityManager *reachability;
 
-- (instancetype)initWithDelegate:(id<PHConnectionBrokerDelegate>)delegate;
+- (instancetype)initWithDelegate:(id<PHConnectionBrokerDelegate>)_aDelegate busDelegate:(id<PHConnectionBrokerBusDelegate>)_aBusDelegate;
 
-- (BOOL)connectToRoom:(XSRoom *)room withConfiguration:(PHMediaConfiguration *)configuration;
+- (BOOL)connectWithConfiguration:(PHMediaConfiguration *)_configuration;
 
 - (void)disconnect;
 
