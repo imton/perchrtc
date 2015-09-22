@@ -16,13 +16,13 @@ Pod::Spec.new do |s|
                    WebRTC in IOS
                    DESC
 
-  s.homepage     = "https://github.com/perchco/perchrtc"
+  s.homepage       = "https://github.com/perchco/perchrtc"
   # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
   s.license      = "MIT"
-  # s.license      = { :type => "MIT", :file => "LICENSE.md" }
+  # s.license    = { :type => "MIT", :file => "LICENSE.md" }
 
-  s.authors            = { "Christopher Eagleston" => "ChristopherEagleston@localhost", "Gaston M" => "gaston@black.uy" }
+  s.authors      = { "Chris Eagleston" => "chris@perch.co", "Gaston M" => "gaston@black.uy" }
 
   s.platform     = :ios
   s.platform     = :ios, "7.0"
@@ -81,6 +81,6 @@ Pod::Spec.new do |s|
 
   # s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
   s.dependency "CocoaLumberjack", "~> 2.0"
-  # s.dependency "nighthawk-webrtc"
+  s.dependency "nighthawk-webrtc"
 
 end
