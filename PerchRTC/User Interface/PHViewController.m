@@ -449,8 +449,7 @@ static CGFloat PHViewControllerHorizontalPadding = 10.0;
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (audioGranted && videoGranted) {
                     [self connectToRoom:kPHConnectionManagerDefaultRoomName];
-                }
-                else {
+                }else{
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please grant PerchRTC access to both your camera and microphone before connecting." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
                     [alert show];
                 }

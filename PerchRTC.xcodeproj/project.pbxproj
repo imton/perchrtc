@@ -436,7 +436,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = PH;
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Perch Communications";
 			};
 			buildConfigurationList = BF80C58319960F54007DE967 /* Build configuration list for PBXProject "PerchRTC" */;
@@ -624,7 +624,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -639,6 +638,8 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_BITCODE = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -668,7 +669,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -683,6 +683,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 3;
@@ -723,6 +724,7 @@
 					"$(OTHER_CFLAGS)",
 					"-frtti",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "co.perch.sample.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "PerchRTC-Dev";
 				WRAPPER_EXTENSION = app;
 			};
@@ -747,6 +749,7 @@
 					"$(OTHER_CFLAGS)",
 					"-frtti",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "co.perch.sample.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -768,6 +771,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "PerchRTCTests/PerchRTCTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.perch.webrtc.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -785,6 +789,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PerchRTC/PerchRTC-Prefix.pch";
 				INFOPLIST_FILE = "PerchRTCTests/PerchRTCTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.perch.webrtc.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = xctest;
 			};
