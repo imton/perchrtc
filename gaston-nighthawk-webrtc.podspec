@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "gaston-nighthawk-webrtc"
-  s.version      = "47"
+  s.version      = "48"
   s.platform     = :ios, '7.0'
   s.summary      = "Pre-compiled library for libWebRTC."
 

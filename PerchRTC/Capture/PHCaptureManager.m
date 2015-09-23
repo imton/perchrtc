@@ -29,8 +29,15 @@
 @property (nonatomic, weak) id sessionRuntimeErrorObserver;
 @property (nonatomic, assign) PHCameraPosition cameraPosition;
 
+
+#if OS_OBJECT_HAVE_OBJC_SUPPORT == 1
+@property (nonatomic, assign) dispatch_queue_t sessionQueue;
+@property (nonatomic, assign) dispatch_queue_t videoCaptureQueue;
+#else
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
 @property (nonatomic, strong) dispatch_queue_t videoCaptureQueue;
+#endif
+
 
 @property (atomic, assign) PHCaptureSessionState captureState;
 @property (atomic, assign, getter = isCaptureInterrupted) BOOL captureInterrupted;
@@ -60,8 +67,8 @@
     self = [super init];
     if (self) {
         _session = session;
-        _sessionQueue = dispatch_queue_create("com.perch.capture", DISPATCH_QUEUE_SERIAL);
-        dispatch_set_target_queue(_sessionQueue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
+        self.sessionQueue = dispatch_queue_create("com.perch.capture", DISPATCH_QUEUE_SERIAL);
+        dispatch_set_target_queue(self.sessionQueue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
 
         _constructorBlocks = [NSMutableArray array];
         _cameraPosition = PHCameraPositionAny;
@@ -83,7 +90,7 @@
     [self stopSessionSync];
     [self teardownCapture];
 
-    _sessionQueue = nil;
+    self.sessionQueue = nil;
 }
 
 #pragma mark - Properties
@@ -365,8 +372,8 @@
  */
 - (void)enqueueSessionBlock:(PHCaptureSessionBlock)sessionBlock
 {
-	if (_sessionQueue) {
-		dispatch_async(_sessionQueue, sessionBlock);
+	if (self.sessionQueue) {
+		dispatch_async(self.sessionQueue, sessionBlock);
 	}
 }
 
@@ -377,8 +384,8 @@
  */
 - (void)enqueueSessionBlockSync:(PHCaptureSessionBlock)sessionBlock
 {
-	if (_sessionQueue) {
-		dispatch_sync(_sessionQueue, sessionBlock);
+	if (self.sessionQueue) {
+		dispatch_sync(self.sessionQueue, sessionBlock);
 	}
 }
 

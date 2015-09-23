@@ -88,4 +88,9 @@ Pod::Spec.new do |s|
   s.dependency "CocoaLumberjack", "~> 2.0"
   s.dependency "gaston-nighthawk-webrtc"
 
+  s.subspec 'VideCapture' do |vc| 
+    vc.source_files   = 'PerchRTC/CaptureKit/PHVideoCaptureKit.mm', 'PerchRTC/CaptureKit/PHVideoCaptureBridge.mm'
+    vc.compiler_flags = '-fno-rtti'
+  end  
+
 end
