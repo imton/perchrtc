@@ -82,8 +82,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.xcconfig = { 
-    'HEADER_SEARCH_PATHS' => '\"$(SRCROOT)\"/**', 
-    'OTHER_LDFLAGS' => '-ObjC' 
+    'HEADER_SEARCH_PATHS' => '"$(SRCROOT)"/**'
   }
 
   s.dependency "CocoaLumberjack", "~> 2.0"
