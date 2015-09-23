@@ -32,12 +32,15 @@
 
 @protocol PHConnectionBrokerBusDelegate<NSObject>
 
+@required
 -(NSDictionary*) ICEServers;
 -(NSString*) connectionID;
 -(NSString*) selfID;
 -(NSString*) peerID;
 -(void) sendToPeerID:(NSString*)_peerID event:(NSString*)_eventName data:(NSDictionary*)_data;
--(void) receivedFromPeerEvent:(void (^)(NSString* peerID, NSString* eventName, NSDictionary* data, NSString* connectionID))_received;
+
+@property(nonatomic, copy) void (^receivedFromPeerEvent)(NSString* peerID, NSString* eventName, NSDictionary* data, NSString* connectionID);
+
 
 @end
 
@@ -48,6 +51,8 @@
  *  The broker handles authorization, and signaling to establish and maintain connections.
  */
 @interface PHConnectionBroker : NSObject
+
+-(void) receivedFromPeerID:(NSString*)_peerID eventName:(NSString*)_eventName data:(NSDictionary*)_data connectionID:(NSString*)_connectionID;
 
 @property (nonatomic, weak) id<PHConnectionBrokerDelegate> delegate;
 @property (nonatomic, weak) id<PHConnectionBrokerBusDelegate> busDelegate;

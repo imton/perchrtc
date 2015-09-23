@@ -8,18 +8,13 @@
 
 #import "PHViewController.h"
 
-#import "PHConnectionBroker.h"
-#import "PHCredentials.h"
 #import "PHEAGLRenderer.h"
-#import "PHErrors.h"
 #import "PHMediaConfiguration.h"
-#import "PHMuteOverlayView.h"
 #import "PHQuartzVideoView.h"
 #import "PHSampleBufferRenderer.h"
 #import "PHSampleBufferView.h"
 
 #import "RTCMediaStream+PHStreamConfiguration.h"
-
 #import "RTCMediaStream.h"
 #import "RTCVideoTrack.h"
 #import "RTCEAGLVideoView.h"
@@ -35,17 +30,18 @@
 @property (nonatomic, strong) NSMutableArray *remoteRenderers;
 
 
+
 @end
 
 @implementation PHViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)init
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super init];
     
     if (self) {
         _remoteRenderers = [NSMutableArray array];
-        _configuration = [PHMediaConfiguration defaultConfiguration];
+        _configuration   = [PHMediaConfiguration defaultConfiguration];
     }
     
     return self;
@@ -56,7 +52,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self connectWithPermission];
+    
+    self.view.backgroundColor = [UIColor greenColor];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -66,65 +63,6 @@
 
 #pragma mark - Private
 
-//- (void)layoutLocalFeed
-//{
-//
-//    UIView *localRenderView = self.localRenderer.rendererView;
-//
-//}
-
-- (NSUInteger)numActiveRemoteRenderers
-{
-    __block NSUInteger activeRenderers = 0;
-    
-    [self.remoteRenderers enumerateObjectsUsingBlock:^(id<PHRenderer> renderer, NSUInteger idx, BOOL *stop) {
-        if (renderer.hasVideoData) {
-            activeRenderers++;
-        }
-    }];
-    
-    return activeRenderers;
-}
-
-//- (BOOL)rendererOrientationsMatch
-//{
-//    __block NSUInteger portraitRenderers = 0;
-//
-//    [self.remoteRenderers enumerateObjectsUsingBlock:^(id<PHRenderer> renderer, NSUInteger idx, BOOL *stop) {
-//        if (renderer.hasVideoData && renderer.videoSize.height > renderer.videoSize.width) {
-//            portraitRenderers++;
-//        }
-//    }];
-//
-//    return (portraitRenderers == [self.remoteRenderers count] || portraitRenderers == 0);
-//}
-
-- (void)layoutRemoteFeeds
-{
-    CGRect bounds = self.view.bounds;
-    BOOL isPortrait = UIInterfaceOrientationIsPortrait(self.interfaceOrientation);
-    
-    NSUInteger numRemoteRenderers = [self numActiveRemoteRenderers];
-    
-    if (numRemoteRenderers == 1) {
-        id<PHRenderer> renderer = [self.remoteRenderers firstObject];
-        renderer.rendererView.frame = bounds;
-    }
-    else if (numRemoteRenderers == 2) {
-        for (id<PHRenderer> renderer in self.remoteRenderers) {
-            
-            // CGRect frame = {origin.x, origin.y, width, height};
-            // renderer.rendererView.frame = frame;
-            
-        }
-    }else if (numRemoteRenderers > 2) {
-        
-        for (id<PHRenderer> renderer in self.remoteRenderers) {
-            //            UIView *rendererView = renderer.rendererView;
-        }
-    }
-}
-
 - (void)startDisconnect
 {
     
@@ -132,12 +70,12 @@
     [self hideLocalRenderer];
     
     [self.connectionBroker disconnect];
-    //    [self.connectionBroker removeObserver:self forKeyPath:@"peerConnectionState"];
+
 }
 
-// TODO: Support tap to zoom for all renderers.
-- (void)handleZoomTap:(UITapGestureRecognizer *)recognizer
-{
+
+//- (void)handleZoomTap:(UITapGestureRecognizer *)recognizer
+//{
     //    UIView *rendererView = recognizer.view;
     //
     //    if ([rendererView isKindOfClass:[PHSampleBufferView class]]) {
@@ -148,10 +86,10 @@
     //        sampleView.bounds = CGRectInset(sampleView.bounds, 1, 1);
     //        sampleView.bounds = CGRectInset(sampleView.bounds, -1, -1);
     //    }
-}
+//}
 
-- (void)handleAudioTap:(UITapGestureRecognizer *)recognizer
-{
+//- (void)handleAudioTap:(UITapGestureRecognizer *)recognizer
+//{
     //    RTCMediaStream *stream = self.connectionBroker.localStream;
     //    BOOL isAudioEnabled = stream.isAudioEnabled;
     //    BOOL setAudioEnabled = !isAudioEnabled;
@@ -171,15 +109,17 @@
     //            renderView.transform = transform;
     //        } completion:nil];
     //    }];
-}
+//}
 
 - (void)connectWithPermission
 {
+    __weak typeof(self) weakSelf = self;
+    
     [AVCaptureDevice requestAccessForMediaType:AVMediaTypeAudio completionHandler:^(BOOL audioGranted) {
         [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL videoGranted) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (audioGranted && videoGranted) {
-                    [self connectToRoom:kPHConnectionManagerDefaultRoomName];
+                    [weakSelf connectNow];
                 }else{
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
                                                                     message:@"Please grant PerchRTC access to both your camera and microphone before connecting."
@@ -193,26 +133,15 @@
     }];
 }
 
-- (void)connectToRoom:(NSString *)roomName
+- (void)connectNow
 {
-    //    NSString *name = [UIDevice currentDevice].name;
-    //    XSRoom *room = [[XSRoom alloc] initWithAuthToken:nil username:name andRoomName:roomName];
-    PHConnectionBroker *connectionBroker = [[PHConnectionBroker alloc] initWithDelegate:self busDelegate:self];
     
-    //    [room addRoomObserver:self];
-    
-    //    [connectionBroker addObserver:self forKeyPath:@"peerConnectionState" options:NSKeyValueObservingOptionOld context:NULL];
-    //    [connectionBroker connectToRoom:room withConfiguration:self.configuration];
+    PHConnectionBroker *connectionBroker = [[PHConnectionBroker alloc] initWithDelegate:self busDelegate:self.busDelegate];
     
     self.connectionBroker = connectionBroker;
     
-    //    [UIApplication sharedApplication].idleTimerDisabled = YES;
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
     
-    //    [self.navigationItem setRightBarButtonItem:nil animated:YES];
-    
-    //    [UIView animateWithDuration:0.2 animations:^{
-    //        self.roomInfoLabel.alpha = 0.0;
-    //    }];
 }
 
 - (void)removeRendererForStream:(RTCMediaStream *)stream
@@ -232,8 +161,7 @@
     
     if (rendererToRemove) {
         [self hideAndRemoveRenderer:rendererToRemove];
-    }
-    else {
+    } else {
         DDLogWarn(@"No renderer to remove for stream: %@", stream);
     }
 }
@@ -311,11 +239,13 @@
     
     UIView *theView = renderer.rendererView;
     
-    if (renderer == self.localRenderer) {
-        [self.view addSubview:theView];
-    } else {
-        [self.view addSubview:theView];
-    }
+    [self.view addSubview:theView];
+
+//    if (renderer == self.localRenderer) {
+//        [self.view addSubview:theView];
+//    } else {
+//        [self.view addSubview:theView];
+//    }
     
 }
 
@@ -346,23 +276,26 @@
 }
 
 
+
+
+
 #pragma mark - PHConnectionBrokerDelegate
 
 - (void)connectionBroker:(PHConnectionBroker *)broker didAddLocalStream:(RTCMediaStream *)localStream
 {
     DDLogVerbose(@"Connection manager did receive local video track: %@", [localStream.videoTracks firstObject]);
     
-#if TARGET_IPHONE_SIMULATOR
-    localStream.audioEnabled = NO;
-#endif
+    #if TARGET_IPHONE_SIMULATOR
+        localStream.audioEnabled = NO;
+    #endif
     
     // Prepare a renderer for the local stream.
     
     self.localRenderer = [self rendererForStream:localStream];
     UIView *theView = self.localRenderer.rendererView;
     
-    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleAudioTap:)];
-    [theView addGestureRecognizer:tapRecognizer];
+//    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleAudioTap:)];
+//    [theView addGestureRecognizer:tapRecognizer];
 }
 
 - (void)connectionBroker:(PHConnectionBroker *)broker didAddStream:(RTCMediaStream *)remoteStream
@@ -390,10 +323,7 @@
 - (void)connectionBrokerDidFinish:(PHConnectionBroker *)broker
 {
     self.connectionBroker = nil;
-    
-    NSString *message = [NSString stringWithFormat:@"Ready to join %@.", [kPHConnectionManagerDefaultRoomName capitalizedString]];
-    
-}
+    }
 
 - (void)connectionBroker:(PHConnectionBroker *)broker didFailWithError:(NSError *)error
 {
@@ -406,8 +336,7 @@
 
 - (void)renderer:(id<PHRenderer>)renderer streamDimensionsDidChange:(CGSize)dimensions
 {
-    NSString *rendererTitle = renderer == self.localRenderer ? @"local renderer" : @"remote renderer";
-    DDLogVerbose(@"Stream dimensions did change for %@: %@, %@", rendererTitle, NSStringFromCGSize(dimensions), renderer);
+    DDLogVerbose(@"Stream dimensions did change for %@ -> %@", NSStringFromCGSize(dimensions), renderer);
     
     [self.view setNeedsLayout];
 }

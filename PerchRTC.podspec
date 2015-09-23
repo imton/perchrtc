@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "PerchRTC"
-  s.version      = "1.0.5"
+  s.version      = "1.0.6"
   s.summary      = "Easiest way to include WebRTC in iOS."
 
   # s.description  = <<-DESC
@@ -17,17 +17,14 @@ Pod::Spec.new do |s|
   #                  DESC
 
   s.homepage       = "https://github.com/perchco/perchrtc"
-  # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
   s.license      = "MIT"
-  # s.license    = { :type => "MIT", :file => "LICENSE.md" }
 
   s.authors      = { "Chris Eagleston" => "chris@perch.co", "Gaston M" => "gaston@black.uy" }
 
   s.platform     = :ios
-  s.platform     = :ios, "7.0"
 
-  s.source       = { :git => "https://github.com/imton/perchrtc.git", :branch => "gaston", :tag => "1.0.5" }
+  s.source       = { :git => "https://github.com/imton/perchrtc.git", :branch => "gaston", :tag => "1.0.6" }
 
 
 
@@ -40,8 +37,8 @@ Pod::Spec.new do |s|
   #
 
   s.source_files  = "PerchRTC", "PerchRTC/**/*.{h,m}"
-  # s.exclude_files = "Classes/Exclude"
 
+  # s.exclude_files = "Classes/Exclude"
   # s.public_header_files = "Classes/**/*.h"
 
 
@@ -56,7 +53,9 @@ Pod::Spec.new do |s|
   # s.resource  = "icon.png"
   # s.resources = "Resources/*.png"
 
-  # s.preserve_paths = "FilesToSave", "MoreFilesToSave"
+  s.preserve_paths = "PerchRTC", "PerchRTC/**/*.{h,m}"
+
+
 
 
   # ――― Project Linking ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -82,8 +81,10 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
 
-  # s.xcconfig  =  { 'LIBRARY_SEARCH_PATHS' => "#{File.join(File.dirname(__FILE__), 'subdir-in-repo')}" }
-  s.xcconfig = { "HEADER_SEARCH_PATHS" => "\"$(SRCROOT)\"/**" }
+  s.xcconfig = { 
+    'HEADER_SEARCH_PATHS' => '\"$(SRCROOT)\"/**', 
+    'OTHER_LDFLAGS' => '-ObjC' 
+  }
 
   s.dependency "CocoaLumberjack", "~> 2.0"
   s.dependency "gaston-nighthawk-webrtc"

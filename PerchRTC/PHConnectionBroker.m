@@ -95,30 +95,25 @@ static BOOL kPHConnectionManagerUseCaptureKit = YES;
         _busDelegate = _aBusDelegate;
         _mutableRemoteStreams = [NSMutableArray array];
         
+
         NSAssert(_busDelegate, @"A bus delegate is required.");
         
-        __weak typeof(self) weakSelf = self;
-        [_busDelegate receivedFromPeerEvent:^(NSString *peerID, NSString *eventName, NSDictionary *data, NSString *connectionID) {
+        
+        __weak typeof(self) safeSelf = self;
+        
+        _busDelegate.receivedFromPeerEvent = ^void(NSString* _peerID, NSString* _eventName, NSDictionary* _data, NSString* _connectionID){
             
-            if ([eventName isEqualToString:kXSMessageEventICE]){
-                
-                [weakSelf handleICEMessage:data peerID:peerID connectionID:connectionID];
-                
-            }else if ([eventName isEqualToString:kXSMessageEventOffer]){
-                
-                [weakSelf handleOffer:data peerID:peerID connectionID:connectionID];
-                
-            }else if ([eventName isEqualToString:kXSMessageEventAnswer]){
-                
-                [weakSelf handleAnswer:data peerID:peerID connectionID:connectionID];
-                
-            }else if ([eventName isEqualToString:kXSMessageEventBye]){
-                
-                [weakSelf handleBye:data peerID:peerID connectionID:connectionID];
-                
+            if ([_eventName isEqualToString:kXSMessageEventICE]){
+                [safeSelf handleICEMessage:_data peerID:_peerID connectionID:_connectionID];
+            }else if ([_eventName isEqualToString:kXSMessageEventOffer]){
+                [safeSelf handleOffer:_data peerID:_peerID connectionID:_connectionID];
+            }else if ([_eventName isEqualToString:kXSMessageEventAnswer]){
+                [safeSelf handleAnswer:_data peerID:_peerID connectionID:_connectionID];
+            }else if ([_eventName isEqualToString:kXSMessageEventBye]){
+                [safeSelf handleBye:_data peerID:_peerID connectionID:_connectionID];
             }
             
-        }];
+        };
         
     }
     return self;
@@ -129,7 +124,11 @@ static BOOL kPHConnectionManagerUseCaptureKit = YES;
     DDLogDebug(@"%s", __PRETTY_FUNCTION__);
 }
 
-#pragma mark - NSObject
+
+//-(void) receivedFromPeerID:(NSString*)_peerID eventName:(NSString*)_eventName data:(NSDictionary*)_data connectionID:(NSString*)_connectionID{
+//
+//    
+//}
 
 
 #pragma mark - Public

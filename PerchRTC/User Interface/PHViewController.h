@@ -10,6 +10,11 @@
 
 #import "PHConnectionBroker.h"
 
-@interface PHViewController : UIViewController <PHConnectionBrokerBusDelegate, PHConnectionBrokerDelegate>
+
+@interface PHViewController : UIViewController <PHConnectionBrokerDelegate>
+
+@property (nonatomic, weak) id<PHConnectionBrokerBusDelegate>busDelegate;
+
+- (void)connectWithPermission;
 
 @end
